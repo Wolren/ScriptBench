@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ScriptBenchDialog</class>
+ <widget class="QDialog" name="ScriptBenchDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>780</width>
+    <height>620</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>ScriptBench</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <widget class="QTabWidget" name="tabWidget">
+     <!-- Tab 0: Run -->
+     <widget class="QWidget" name="tabRun">
+      <attribute name="title"><string>Run</string></attribute>
+      <layout class="QVBoxLayout">
+       <!-- Suite group -->
+       <item>
+        <widget class="QGroupBox" name="grpSuite">
+         <property name="title"><string>Benchmark suite</string></property>
+         <layout class="QGridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel"><property name="text"><string>Suite name:</string></property></widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QComboBox" name="cmbSuite">
+            <property name="editable"><bool>true</bool></property>
+            <property name="toolTip"><string>Select saved suite or type a new name</string></property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QPushButton" name="btnSaveSuite">
+            <property name="text"><string>Save suite</string></property>
+           </widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QPushButton" name="btnDeleteSuite">
+            <property name="text"><string>Delete suite</string></property>
+           </widget>
+          </item>
+          <item row="1" column="0">
+           <widget class="QLabel"><property name="text"><string>Script folder:</string></property></widget>
+          </item>
+          <item row="1" column="1" colspan="2">
+           <widget class="QLineEdit" name="txtFolder">
+            <property name="placeholderText"><string>Path to folder containing .py scripts</string></property>
+           </widget>
+          </item>
+          <item row="1" column="3">
+           <widget class="QPushButton" name="btnBrowse">
+            <property name="text"><string>Browse...</string></property>
+           </widget>
+          </item>
+          <item row="2" column="0">
+           <widget class="QLabel"><property name="text"><string>File filter:</string></property></widget>
+          </item>
+          <item row="2" column="1">
+           <widget class="QLineEdit" name="txtFilter">
+            <property name="text"><string>*.py</string></property>
+            <property name="toolTip"><string>Glob pattern, e.g. *.py or bench_*.py</string></property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QLabel"><property name="text"><string>Description:</string></property></widget>
+          </item>
+          <item row="3" column="1" colspan="3">
+           <widget class="QLineEdit" name="txtDescription"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <!-- Settings group -->
+       <item>
+        <widget class="QGroupBox" name="grpSettings">
+         <property name="title"><string>Settings</string></property>
+         <layout class="QGridLayout">
+          <item row="0" column="0">
+           <widget class="QLabel"><property name="text"><string>Repeats:</string></property></widget>
+          </item>
+          <item row="0" column="1">
+           <widget class="QSpinBox" name="spnRepeats">
+            <property name="minimum"><number>1</number></property>
+            <property name="maximum"><number>100</number></property>
+            <property name="value"><number>5</number></property>
+           </widget>
+          </item>
+          <item row="0" column="2">
+           <widget class="QLabel"><property name="text"><string>Warm-up runs:</string></property></widget>
+          </item>
+          <item row="0" column="3">
+           <widget class="QSpinBox" name="spnWarmups">
+            <property name="minimum"><number>0</number></property>
+            <property name="maximum"><number>10</number></property>
+            <property name="value"><number>1</number></property>
+           </widget>
+          </item>
+          <item row="1" column="0" colspan="2">
+           <widget class="QCheckBox" name="chkSaveOutput">
+            <property name="text"><string>Save outputs (default: temp only)</string></property>
+           </widget>
+          </item>
+          <item row="1" column="2" colspan="2">
+           <widget class="QCheckBox" name="chkPreserveTemp">
+            <property name="text"><string>Preserve temp outputs for debugging</string></property>
+           </widget>
+          </item>
+          <item row="2" column="0" colspan="2">
+           <widget class="QCheckBox" name="chkProfile">
+            <property name="text"><string>Attach cProfile (one run per script)</string></property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <!-- Script list preview -->
+       <item>
+        <widget class="QGroupBox" name="grpScripts">
+         <property name="title"><string>Scripts in folder</string></property>
+         <layout class="QVBoxLayout">
+          <item>
+           <widget class="QListWidget" name="lstScripts">
+            <property name="selectionMode">
+             <enum>QAbstractItemView::NoSelection</enum>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="btnRefreshScripts">
+            <property name="text"><string>Refresh list</string></property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <!-- Run controls -->
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QPushButton" name="btnRun">
+           <property name="text"><string>Run benchmark</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnCancel">
+           <property name="text"><string>Cancel</string></property>
+           <property name="enabled"><bool>false</bool></property>
+          </widget>
+         </item>
+         <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+        </layout>
+       </item>
+       <!-- Progress -->
+       <item>
+        <widget class="QProgressBar" name="progressBar">
+         <property name="value"><number>0</number></property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="lblStatus">
+         <property name="text"><string>Ready.</string></property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <!-- Tab 1: Results -->
+     <widget class="QWidget" name="tabResults">
+      <attribute name="title"><string>Results</string></attribute>
+      <layout class="QVBoxLayout">
+       <item>
+        <widget class="QTableWidget" name="tblResults">
+         <property name="alternatingRowColors"><bool>true</bool></property>
+         <property name="selectionBehavior"><enum>QAbstractItemView::SelectRows</enum></property>
+         <property name="sortingEnabled"><bool>true</bool></property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QPushButton" name="btnExportCSV">
+           <property name="text"><string>Export CSV...</string></property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="btnExportHTML">
+           <property name="text"><string>Export HTML report...</string></property>
+          </widget>
+         </item>
+         <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+     <!-- Tab 2: Log -->
+     <widget class="QWidget" name="tabLog">
+      <attribute name="title"><string>Log</string></attribute>
+      <layout class="QVBoxLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="txtLog">
+         <property name="readOnly"><bool>true</bool></property>
+         <property name="font">
+          <font><family>Courier New</family><pointsize>9</pointsize></font>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout">
+         <item>
+          <widget class="QPushButton" name="btnClearLog">
+           <property name="text"><string>Clear log</string></property>
+          </widget>
+         </item>
+         <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+        </layout>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <!-- Bottom close button -->
+   <item>
+    <layout class="QHBoxLayout">
+     <item><spacer><property name="orientation"><enum>Qt::Horizontal</enum></property></spacer></item>
+     <item>
+      <widget class="QPushButton" name="btnClose">
+       <property name="text"><string>Close</string></property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
