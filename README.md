@@ -4,7 +4,7 @@
 
 ![QGIS](https://img.shields.io/badge/QGIS-3.16%20—%204.99-%234A9C6C)
 ![Python](https://img.shields.io/badge/Python-3.9%20—%203.12-blue)
-![License](https://img.shields.io/badge/license-GPL--2.0-green)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
 ## Features
 
@@ -95,4 +95,4 @@ scriptbench/
 
 ## License
 
-GPL-2.0 — see `LICENSE`.
+GPL-3.0 — see `LICENSE`.
