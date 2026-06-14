@@ -14,13 +14,14 @@ SAVE_OUTPUT is also injected into the script namespace as a global.
 """
 
 import time
+from typing import Dict, List, Optional
 
 
 class PhaseRecord:
     def __init__(self, name: str, start: float):
         self.name = name
         self.start = start
-        self.end: float | None = None
+        self.end: Optional[float] = None
 
     def duration(self) -> float:
         if self.end is None:
@@ -39,10 +40,10 @@ class BenchmarkContext:
         self.temp_dir = temp_dir
         self.save_output = save_output
 
-        self._phases: list[PhaseRecord] = []
-        self._current: PhaseRecord | None = None
+        self._phases: List[PhaseRecord] = []
+        self._current: Optional[PhaseRecord] = None
         self._total_start: float = 0.0
-        self._total_end: float | None = None
+        self._total_end: Optional[float] = None
 
     # -----------------------------------------------------------------
     # Public API for scripts
@@ -75,9 +76,9 @@ class BenchmarkContext:
             return 0.0
         return self._total_end - self._total_start
 
-    def phase_times(self) -> dict:
+    def phase_times(self) -> Dict[str, float]:
         """Returns {phase_name: seconds} for all completed phases."""
-        result = {}
+        result: Dict[str, float] = {}
         for p in self._phases:
             dur = p.duration()
             if p.name in result:
@@ -86,11 +87,11 @@ class BenchmarkContext:
                 result[p.name] = dur
         return result
 
-    def compute_time(self) -> float | None:
+    def compute_time(self) -> Optional[float]:
         pt = self.phase_times()
         return pt.get("compute", None)
 
-    def save_time(self) -> float | None:
+    def save_time(self) -> Optional[float]:
         pt = self.phase_times()
         return pt.get("save", None)
 

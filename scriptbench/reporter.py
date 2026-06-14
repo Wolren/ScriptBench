@@ -12,14 +12,21 @@ import os
 import math
 from datetime import datetime
 from pathlib import Path
-from typing import List
+from typing import Dict, List, Optional, Any
 
 from .runner import ScriptSummary
+
+
+def compute_derived(
+    summaries: List[ScriptSummary],
+) -> List[Dict[str, Any]]:
+    return _compute_derived(summaries)
 
 
 # --------------------------------------------------------------------------
 # CSV export
 # --------------------------------------------------------------------------
+
 
 def export_csv(summaries: List[ScriptSummary], output_path: str) -> None:
     rows = []
@@ -27,21 +34,23 @@ def export_csv(summaries: List[ScriptSummary], output_path: str) -> None:
         ws = s.wall_stats()
         cs = s.compute_stats()
         ss = s.save_stats()
-        rows.append({
-            "script": s.script_name,
-            "runs": ws["n"],
-            "failures": s.failure_count(),
-            "wall_mean": _fmt(ws["mean"]),
-            "wall_min": _fmt(ws["min"]),
-            "wall_max": _fmt(ws["max"]),
-            "wall_median": _fmt(ws["median"]),
-            "wall_stdev": _fmt(ws["stdev"]),
-            "wall_cv_pct": _fmt(ws["cv"]),
-            "compute_mean": _fmt(cs["mean"]),
-            "save_mean": _fmt(ss["mean"]),
-            "has_phases": s.has_phase_data(),
-            "warnings": "; ".join(s.warnings),
-        })
+        rows.append(
+            {
+                "script": s.script_name,
+                "runs": ws["n"],
+                "failures": s.failure_count(),
+                "wall_mean": _fmt(ws["mean"]),
+                "wall_min": _fmt(ws["min"]),
+                "wall_max": _fmt(ws["max"]),
+                "wall_median": _fmt(ws["median"]),
+                "wall_stdev": _fmt(ws["stdev"]),
+                "wall_cv_pct": _fmt(ws["cv"]),
+                "compute_mean": _fmt(cs["mean"]),
+                "save_mean": _fmt(ss["mean"]),
+                "has_phases": s.has_phase_data(),
+                "warnings": "; ".join(s.warnings),
+            }
+        )
 
     if not rows:
         return
@@ -65,7 +74,8 @@ def _fmt(v) -> str:
 # Derived comparison metrics
 # --------------------------------------------------------------------------
 
-def _compute_derived(summaries: List[ScriptSummary]) -> List[dict]:
+
+def _compute_derived(summaries: List[ScriptSummary]) -> List[Dict[str, Any]]:
     rows = []
     valid = [s for s in summaries if s.wall_stats()["mean"] is not None]
     if not valid:
@@ -84,24 +94,26 @@ def _compute_derived(summaries: List[ScriptSummary]) -> List[dict]:
             compute_share = cs["mean"] / mean * 100
         if mean and ss["mean"]:
             save_share = ss["mean"] / mean * 100
-        rows.append({
-            "script": s.script_name,
-            "wall_mean": mean,
-            "wall_min": ws["min"],
-            "wall_median": ws["median"],
-            "wall_stdev": ws["stdev"],
-            "wall_cv": ws["cv"],
-            "compute_mean": cs["mean"],
-            "save_mean": ss["mean"],
-            "compute_share_pct": compute_share,
-            "save_share_pct": save_share,
-            "speedup_vs_fastest": speedup,
-            "failures": s.failure_count(),
-            "runs": ws["n"],
-            "has_phases": s.has_phase_data(),
-            "warnings": s.warnings,
-        })
-    rows.sort(key=lambda r: (r["wall_mean"] or 1e9))
+        rows.append(
+            {
+                "script": s.script_name,
+                "wall_mean": mean,
+                "wall_min": ws["min"],
+                "wall_median": ws["median"],
+                "wall_stdev": ws["stdev"],
+                "wall_cv": ws["cv"],
+                "compute_mean": cs["mean"],
+                "save_mean": ss["mean"],
+                "compute_share_pct": compute_share,
+                "save_share_pct": save_share,
+                "speedup_vs_fastest": speedup,
+                "failures": s.failure_count(),
+                "runs": ws["n"],
+                "has_phases": s.has_phase_data(),
+                "warnings": s.warnings,
+            }
+        )
+    rows.sort(key=lambda r: r["wall_mean"] or 1e9)
     return rows
 
 
@@ -109,9 +121,10 @@ def _compute_derived(summaries: List[ScriptSummary]) -> List[dict]:
 # Inline SVG chart helpers
 # --------------------------------------------------------------------------
 
+
 def _bar_chart_svg(
-    labels: list[str],
-    values: list[float | None],
+    labels: List[str],
+    values: List[Optional[float]],
     title: str,
     color: str = "#4a90d9",
     unit: str = "s",
@@ -131,37 +144,47 @@ def _bar_chart_svg(
     bar_h = max(12, chart_h // max(len(clean), 1) - 6)
     gap = max(4, (chart_h - bar_h * len(clean)) // max(len(clean) + 1, 1))
 
-    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
-             f'style="font-family:sans-serif;font-size:12px;">']
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+        f'style="font-family:sans-serif;font-size:12px;">'
+    ]
     # title
-    parts.append(f'<text x="{width//2}" y="20" text-anchor="middle" '
-                 f'font-size="14" font-weight="bold" fill="#222">{_esc(title)}</text>')
+    parts.append(
+        f'<text x="{width // 2}" y="20" text-anchor="middle" '
+        f'font-size="14" font-weight="bold" fill="#222">{_esc(title)}</text>'
+    )
 
     for i, (label, val) in enumerate(clean):
         y = margin_top + gap + i * (bar_h + gap)
         bar_w = int(val / max_val * chart_w)
         # bar
         fill = color if val > 0 else "#e0e0e0"
-        parts.append(f'<rect x="{margin_left}" y="{y}" width="{bar_w}" height="{bar_h}" '
-                     f'fill="{fill}" rx="3"/>')
+        parts.append(
+            f'<rect x="{margin_left}" y="{y}" width="{bar_w}" height="{bar_h}" '
+            f'fill="{fill}" rx="3"/>'
+        )
         # label
-        parts.append(f'<text x="{margin_left - 6}" y="{y + bar_h//2 + 4}" '
-                     f'text-anchor="end" fill="#333">{_esc(label[:28])}</text>')
+        parts.append(
+            f'<text x="{margin_left - 6}" y="{y + bar_h // 2 + 4}" '
+            f'text-anchor="end" fill="#333">{_esc(label[:28])}</text>'
+        )
         # value
         if val > 0:
             val_str = f"{val:.3f}{unit}"
-            parts.append(f'<text x="{margin_left + bar_w + 4}" y="{y + bar_h//2 + 4}" '
-                         f'fill="#555">{val_str}</text>')
+            parts.append(
+                f'<text x="{margin_left + bar_w + 4}" y="{y + bar_h // 2 + 4}" '
+                f'fill="#555">{val_str}</text>'
+            )
 
     parts.append("</svg>")
     return "\n".join(parts)
 
 
 def _grouped_bar_svg(
-    labels: list[str],
-    groups: dict[str, list[float | None]],
+    labels: List[str],
+    groups: Dict[str, List[Optional[float]]],
     title: str,
-    colors: dict[str, str],
+    colors: Dict[str, str],
     unit: str = "s",
     width: int = 680,
     height: int = 320,
@@ -187,17 +210,23 @@ def _grouped_bar_svg(
     group_block = chart_h // n_scripts
     bar_h = max(8, group_block // (n_groups + 1))
 
-    parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
-             f'style="font-family:sans-serif;font-size:11px;">']
-    parts.append(f'<text x="{width//2}" y="22" text-anchor="middle" '
-                 f'font-size="13" font-weight="bold" fill="#222">{_esc(title)}</text>')
+    parts = [
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" '
+        f'style="font-family:sans-serif;font-size:11px;">'
+    ]
+    parts.append(
+        f'<text x="{width // 2}" y="22" text-anchor="middle" '
+        f'font-size="13" font-weight="bold" fill="#222">{_esc(title)}</text>'
+    )
 
     gnames = list(groups.keys())
     for si, label in enumerate(labels):
         block_top = margin_top + si * group_block
         # script label
-        parts.append(f'<text x="{margin_left - 6}" y="{block_top + group_block//2 + 4}" '
-                     f'text-anchor="end" fill="#333">{_esc(label[:28])}</text>')
+        parts.append(
+            f'<text x="{margin_left - 6}" y="{block_top + group_block // 2 + 4}" '
+            f'text-anchor="end" fill="#333">{_esc(label[:28])}</text>'
+        )
         for gi, gname in enumerate(gnames):
             val = groups[gname][si]
             if val is None:
@@ -205,26 +234,39 @@ def _grouped_bar_svg(
             y = block_top + gi * (bar_h + 2) + 4
             bar_w = int(val / max_val * chart_w)
             col = colors.get(gname, "#888")
-            parts.append(f'<rect x="{margin_left}" y="{y}" width="{bar_w}" height="{bar_h}" '
-                         f'fill="{col}" rx="2"/>')
+            parts.append(
+                f'<rect x="{margin_left}" y="{y}" width="{bar_w}" height="{bar_h}" '
+                f'fill="{col}" rx="2"/>'
+            )
             if val > 0:
-                parts.append(f'<text x="{margin_left + bar_w + 3}" y="{y + bar_h - 1}" '
-                              f'fill="#555">{val:.3f}{unit}</text>')
+                parts.append(
+                    f'<text x="{margin_left + bar_w + 3}" y="{y + bar_h - 1}" '
+                    f'fill="#555">{val:.3f}{unit}</text>'
+                )
 
     # legend
     lx = width - margin_right + 10
     for gi, gname in enumerate(gnames):
         col = colors.get(gname, "#888")
         ly = margin_top + gi * 20
-        parts.append(f'<rect x="{lx}" y="{ly}" width="14" height="12" fill="{col}" rx="2"/>')
-        parts.append(f'<text x="{lx + 18}" y="{ly + 10}" fill="#333">{_esc(gname)}</text>')
+        parts.append(
+            f'<rect x="{lx}" y="{ly}" width="14" height="12" fill="{col}" rx="2"/>'
+        )
+        parts.append(
+            f'<text x="{lx + 18}" y="{ly + 10}" fill="#333">{_esc(gname)}</text>'
+        )
 
     parts.append("</svg>")
     return "\n".join(parts)
 
 
 def _esc(s: str) -> str:
-    return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+    return (
+        s.replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+    )
 
 
 # --------------------------------------------------------------------------
@@ -286,8 +328,10 @@ def export_html(
     compute_means = [r["compute_mean"] for r in rows]
     save_means = [r["save_mean"] for r in rows]
 
-    chart_wall = _bar_chart_svg(labels, wall_means, "Mean wall-clock time per script", "#4a7fc1")
-    
+    chart_wall = _bar_chart_svg(
+        labels, wall_means, "Mean wall-clock time per script", "#4a7fc1"
+    )
+
     has_any_phases = any(r["has_phases"] for r in rows)
     chart_phase = ""
     if has_any_phases:
@@ -299,10 +343,14 @@ def export_html(
         )
 
     cv_vals = [r["wall_cv"] for r in rows]
-    chart_cv = _bar_chart_svg(labels, cv_vals, "Coefficient of variation (wall time)", "#7bbf72", unit="%")
+    chart_cv = _bar_chart_svg(
+        labels, cv_vals, "Coefficient of variation (wall time)", "#7bbf72", unit="%"
+    )
 
     speedups = [r["speedup_vs_fastest"] for r in rows]
-    chart_speedup = _bar_chart_svg(labels, speedups, "Slowdown vs fastest (1.0 = fastest)", "#c17a4a", unit="x")
+    chart_speedup = _bar_chart_svg(
+        labels, speedups, "Slowdown vs fastest (1.0 = fastest)", "#c17a4a", unit="x"
+    )
 
     # ---------- summary table ----------
     summary_rows_html = []
@@ -315,19 +363,23 @@ def export_html(
             if r["has_phases"]
             else '<span class="badge badge-nophase">no</span>'
         )
-        speedup_str = f"{r['speedup_vs_fastest']:.2f}x" if r["speedup_vs_fastest"] is not None else "—"
+        speedup_str = (
+            f"{r['speedup_vs_fastest']:.2f}x"
+            if r["speedup_vs_fastest"] is not None
+            else "—"
+        )
         summary_rows_html.append(f"""
         <tr{tr_class}>
-          <td><a href="#detail-{_esc(r['script'])}">{_esc(r['script'])}</a></td>
-          <td>{_s(r['wall_mean'])}</td>
-          <td>{_s(r['wall_min'])}</td>
-          <td>{_s(r['wall_median'])}</td>
-          <td>{_s(r['wall_stdev'])}</td>
-          <td>{_s(r['wall_cv'], '.1f', '%')}</td>
-          <td>{_s(r['compute_mean'])}</td>
-          <td>{_s(r['save_mean'])}</td>
+          <td><a href="#detail-{_esc(r["script"])}">{_esc(r["script"])}</a></td>
+          <td>{_s(r["wall_mean"])}</td>
+          <td>{_s(r["wall_min"])}</td>
+          <td>{_s(r["wall_median"])}</td>
+          <td>{_s(r["wall_stdev"])}</td>
+          <td>{_s(r["wall_cv"], ".1f", "%")}</td>
+          <td>{_s(r["compute_mean"])}</td>
+          <td>{_s(r["save_mean"])}</td>
           <td>{speedup_str}</td>
-          <td>{r['failures']}/{r['runs']}</td>
+          <td>{r["failures"]}/{r["runs"]}</td>
           <td>{badge}</td>
           <td>{phase_badge}</td>
         </tr>""")
@@ -351,13 +403,13 @@ def export_html(
             f"<td>{_s(res.wall_time)}</td>"
             f"<td>{_s(res.compute_time)}</td>"
             f"<td>{_s(res.save_time)}</td>"
-            f"<td>{'yes' if res.success else '<span style=\"color:red\">FAIL</span>'}</td>"
+            f"<td>{'yes' if res.success else '<span style="color:red">FAIL</span>'}</td>"
             f"<td style='font-size:0.78rem;color:#c00'>{_esc(res.error or '')[:120]}</td></tr>"
             for res in s_obj.results
         )
 
         detail_sections.append(f"""
-        <h3 id="detail-{_esc(r['script'])}">{_esc(r['script'])}</h3>
+        <h3 id="detail-{_esc(r["script"])}">{_esc(r["script"])}</h3>
         {warn_html}
         <table>
           <tr><th>Run</th><th>Wall</th><th>Compute</th><th>Save</th><th>Status</th><th>Error</th></tr>
@@ -365,8 +417,7 @@ def export_html(
         </table>""")
 
     toc_links = "".join(
-        f'<a href="#detail-{_esc(r["script"])}">{_esc(r["script"])}</a>'
-        for r in rows
+        f'<a href="#detail-{_esc(r["script"])}">{_esc(r["script"])}</a>' for r in rows
     )
 
     html = f"""<!DOCTYPE html>
@@ -380,7 +431,7 @@ def export_html(
 <body>
 <div class="wrap">
   <h1>{_esc(title)}</h1>
-  <div class="meta">Generated: {now} &nbsp;|&nbsp; Suite: {_esc(suite_name or '—')}
+  <div class="meta">Generated: {now} &nbsp;|&nbsp; Suite: {_esc(suite_name or "—")}
   &nbsp;|&nbsp; Repeats: {repeats} &nbsp;|&nbsp; Warm-ups: {warmups}
   &nbsp;|&nbsp; Scripts: {len(summaries)}</div>
 
@@ -389,7 +440,7 @@ def export_html(
 
   <h2>Comparison overview</h2>
   <div class="chart-wrap">{chart_wall}</div>
-  {'<div class="chart-wrap">' + chart_phase + '</div>' if chart_phase else ''}
+  {'<div class="chart-wrap">' + chart_phase + "</div>" if chart_phase else ""}
   <div class="chart-wrap">{chart_speedup}</div>
   <div class="chart-wrap">{chart_cv}</div>
 
@@ -404,11 +455,11 @@ def export_html(
       <th>Compute mean</th><th>Save mean</th>
       <th>Slowdown</th><th>Fail/Runs</th><th>Status</th><th>Phases</th>
     </tr>
-    {''.join(summary_rows_html)}
+    {"".join(summary_rows_html)}
   </table>
 
   <h2>Per-script details</h2>
-  {''.join(detail_sections)}
+  {"".join(detail_sections)}
 
   <footer>ScriptBench &mdash; QGIS benchmark plugin</footer>
 </div>

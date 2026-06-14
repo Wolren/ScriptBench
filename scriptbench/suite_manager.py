@@ -13,15 +13,16 @@ Suites are stored in the QGIS user profile directory under scriptbench/suites/.
 import json
 import os
 from pathlib import Path
+from typing import Dict, List, Optional
 
 
 def _suites_dir() -> Path:
     try:
         from qgis.core import QgsApplication
-        profile_dir = QgsApplication.qgisUserDatabaseFilePath()
-        base = Path(profile_dir).parent
+
+        base = Path(QgsApplication.qgisSettingsDirPath())
     except Exception:
-        base = Path.home() / ".qgis2"
+        base = Path.home() / ".qgis3"
     d = base / "scriptbench" / "suites"
     d.mkdir(parents=True, exist_ok=True)
     return d
@@ -38,13 +39,19 @@ DEFAULT_SETTINGS = {
 
 
 class Suite:
-    def __init__(self, name: str, folder: str, settings: dict | None = None, description: str = ""):
+    def __init__(
+        self,
+        name: str,
+        folder: str,
+        settings: Optional[Dict] = None,
+        description: str = "",
+    ):
         self.name = name
         self.folder = folder
-        self.settings: dict = {**DEFAULT_SETTINGS, **(settings or {})}
+        self.settings: Dict = {**DEFAULT_SETTINGS, **(settings or {})}
         self.description = description
 
-    def to_dict(self) -> dict:
+    def to_dict(self) -> Dict:
         return {
             "name": self.name,
             "folder": self.folder,
@@ -53,7 +60,7 @@ class Suite:
         }
 
     @staticmethod
-    def from_dict(d: dict) -> "Suite":
+    def from_dict(d: Dict) -> "Suite":
         return Suite(
             name=d.get("name", "unnamed"),
             folder=d.get("folder", ""),
@@ -61,7 +68,7 @@ class Suite:
             description=d.get("description", ""),
         )
 
-    def resolve_scripts(self) -> list[str]:
+    def resolve_scripts(self) -> List[str]:
         """Return sorted list of .py file paths matching the filter in folder."""
         folder = Path(self.folder)
         if not folder.is_dir():
@@ -71,22 +78,39 @@ class Suite:
 
 
 class SuiteManager:
-
-    def list_suites(self) -> list[str]:
+    def list_suites(self) -> List[str]:
         d = _suites_dir()
         return sorted(p.stem for p in d.glob("*.json"))
 
-    def load(self, name: str) -> Suite | None:
+    def load(self, name: str) -> Optional["Suite"]:
         path = _suites_dir() / f"{name}.json"
         if not path.exists():
             return None
-        with open(path, "r", encoding="utf-8") as fh:
-            return Suite.from_dict(json.load(fh))
+        try:
+            with open(path, "r", encoding="utf-8") as fh:
+                return Suite.from_dict(json.load(fh))
+        except (json.JSONDecodeError, OSError) as exc:
+            from qgis.core import QgsMessageLog
+
+            QgsMessageLog.logMessage(
+                f"Failed to load suite '{name}': {exc}", "ScriptBench", level=2
+            )
+            return None
 
     def save(self, suite: Suite) -> None:
         path = _suites_dir() / f"{suite.name}.json"
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(suite.to_dict(), fh, indent=2)
+        try:
+            with open(path, "w", encoding="utf-8") as fh:
+                json.dump(suite.to_dict(), fh, indent=2)
+        except OSError as exc:
+            from qgis.core import QgsMessageLog
+
+            QgsMessageLog.logMessage(
+                f"Failed to save suite '{suite.name}': {exc}",
+                "ScriptBench",
+                level=2,
+            )
+            raise
 
     def delete(self, name: str) -> None:
         path = _suites_dir() / f"{name}.json"

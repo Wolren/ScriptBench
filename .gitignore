@@ -1,0 +1,28 @@
+# Old version folders
+1/
+2/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.ruff_cache/
+
+# IDE
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Distribution
+*.zip
+*.egg-info/
+dist/
+build/
+
+# Translations (compiled)
+*.qm
+/archive/

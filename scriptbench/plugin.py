@@ -3,37 +3,50 @@ plugin.py  --  ScriptBench main plugin class.
 """
 
 from pathlib import Path
+from typing import List, Optional, Dict, Any
 
-try:
-    from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox, QTableWidgetItem
-    from qgis.PyQt.QtGui import QIcon
-    from qgis.PyQt.QtCore import Qt
-except ImportError:
-    from PyQt5.QtWidgets import QAction, QFileDialog, QMessageBox, QTableWidgetItem
-    from PyQt5.QtGui import QIcon
-    from PyQt5.QtCore import Qt
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox, QTableWidgetItem
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtCore import Qt, QCoreApplication
+from qgis.core import QgsMessageLog
 
 from .suite_manager import SuiteManager, Suite, DEFAULT_SETTINGS
-from .runner import BenchmarkRunner
-from .reporter import export_csv, export_html
+from .runner import BenchmarkRunner, ScriptSummary
+from .reporter import export_csv, export_html, compute_derived
+
+
+def tr(message: str) -> str:
+    return QCoreApplication.translate("ScriptBenchPlugin", message)
 
 
 class ScriptBenchPlugin:
     PLUGIN_NAME = "ScriptBench"
+    PLUGIN_TAG = "ScriptBench"
 
     def __init__(self, iface):
         self.iface = iface
-        self._action = None
+        self._action: Optional[QAction] = None
         self._dialog = None
         self._suite_manager = SuiteManager()
-        self._last_summaries = []
-        self._last_settings = dict(DEFAULT_SETTINGS)
+        self._last_summaries: List[ScriptSummary] = []
+        self._last_settings: Dict[str, Any] = dict(DEFAULT_SETTINGS)
+
+    # -----------------------------------------------------------------
+    # Plugin lifecycle
+    # -----------------------------------------------------------------
 
     def initGui(self):
         icon_path = Path(__file__).parent / "icons" / "scriptbench.png"
         icon = QIcon(str(icon_path)) if icon_path.exists() else QIcon()
         self._action = QAction(icon, self.PLUGIN_NAME, self.iface.mainWindow())
-        self._action.setToolTip("Open ScriptBench — PyQGIS script benchmark tool")
+        self._action.setObjectName("scriptBenchAction")
+        self._action.setToolTip(tr("Open ScriptBench — PyQGIS script benchmark tool"))
+        self._action.setWhatsThis(
+            tr(
+                "ScriptBench runs PyQGIS scripts multiple times "
+                "and produces detailed benchmark reports."
+            )
+        )
         self._action.triggered.connect(self.run)
         self.iface.addToolBarIcon(self._action)
         self.iface.addPluginToMenu(self.PLUGIN_NAME, self._action)
@@ -43,9 +56,17 @@ class ScriptBenchPlugin:
             self.iface.removePluginMenu(self.PLUGIN_NAME, self._action)
             self.iface.removeToolBarIcon(self._action)
             self._action = None
+        if self._dialog:
+            self._dialog.close()
+            self._dialog = None
+
+    # -----------------------------------------------------------------
+    # Dialog lifecycle
+    # -----------------------------------------------------------------
 
     def run(self):
         from .ui.dialog import load_dialog
+
         if self._dialog is None:
             self._dialog = load_dialog(self.iface.mainWindow())
             self._connect_signals()
@@ -67,6 +88,10 @@ class ScriptBenchPlugin:
         d.btnExportHTML.clicked.connect(self._export_html)
         d.btnClearLog.clicked.connect(d.txtLog.clear)
         d.btnClose.clicked.connect(d.hide)
+
+    # -----------------------------------------------------------------
+    # Suite management
+    # -----------------------------------------------------------------
 
     def _populate_suites(self):
         d = self._dialog
@@ -99,7 +124,9 @@ class ScriptBenchPlugin:
         d = self._dialog
         name = d.cmbSuite.currentText().strip()
         if not name:
-            QMessageBox.warning(d, "ScriptBench", "Enter a suite name before saving.")
+            QMessageBox.warning(
+                d, self.PLUGIN_NAME, tr("Enter a suite name before saving.")
+            )
             return
         suite = Suite(
             name=name,
@@ -121,22 +148,33 @@ class ScriptBenchPlugin:
             d.cmbSuite.blockSignals(True)
             d.cmbSuite.setCurrentIndex(idx)
             d.cmbSuite.blockSignals(False)
-        self._log(f"Suite saved: {name}")
+        self._log(tr("Suite saved: {0}").format(name))
 
     def _delete_suite(self):
         d = self._dialog
         name = d.cmbSuite.currentText().strip()
         if not name:
             return
-        reply = QMessageBox.question(d, "ScriptBench", f"Delete suite '{name}'?", QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No)
+        reply = QMessageBox.question(
+            d,
+            self.PLUGIN_NAME,
+            tr("Delete suite '{0}'?").format(name),
+            QMessageBox.StandardButton.Yes | QMessageBox.StandardButton.No,
+        )
         if reply == QMessageBox.StandardButton.Yes:
             self._suite_manager.delete(name)
             self._populate_suites()
-            self._log(f"Suite deleted: {name}")
+            self._log(tr("Suite deleted: {0}").format(name))
+
+    # -----------------------------------------------------------------
+    # Script browsing
+    # -----------------------------------------------------------------
 
     def _browse_folder(self):
         d = self._dialog
-        folder = QFileDialog.getExistingDirectory(d, "Select script folder", d.txtFolder.text() or "")
+        folder = QFileDialog.getExistingDirectory(
+            d, tr("Select script folder"), d.txtFolder.text() or ""
+        )
         if folder:
             d.txtFolder.setText(folder)
             self._refresh_scripts()
@@ -147,16 +185,20 @@ class ScriptBenchPlugin:
         folder = d.txtFolder.text().strip()
         filt = d.txtFilter.text().strip() or "*.py"
         if not folder or not Path(folder).is_dir():
-            d.lstScripts.addItem("(folder not found)")
+            d.lstScripts.addItem(tr("(folder not found)"))
             return
         scripts = sorted(Path(folder).glob(filt))
         scripts = [p for p in scripts if p.is_file()]
         if not scripts:
-            d.lstScripts.addItem("(no matching files)")
+            d.lstScripts.addItem(tr("(no matching files)"))
         for p in scripts:
             d.lstScripts.addItem(p.name)
 
-    def _build_settings(self):
+    # -----------------------------------------------------------------
+    # Benchmark execution
+    # -----------------------------------------------------------------
+
+    def _build_settings(self) -> Dict[str, Any]:
         d = self._dialog
         return {
             "repeats": d.spnRepeats.value(),
@@ -171,17 +213,24 @@ class ScriptBenchPlugin:
         d = self._dialog
         folder = d.txtFolder.text().strip()
         if not folder or not Path(folder).is_dir():
-            QMessageBox.warning(d, "ScriptBench", "Select a valid script folder first.")
+            QMessageBox.warning(
+                d, self.PLUGIN_NAME, tr("Select a valid script folder first.")
+            )
             return
         settings = self._build_settings()
-        script_paths = sorted(str(p) for p in Path(folder).glob(settings["file_filter"]) if p.is_file())
+        script_paths = sorted(
+            str(p) for p in Path(folder).glob(settings["file_filter"]) if p.is_file()
+        )
         if not script_paths:
-            QMessageBox.warning(d, "ScriptBench", "No scripts found matching the filter.")
+            QMessageBox.warning(
+                d, self.PLUGIN_NAME, tr("No scripts found matching the filter.")
+            )
             return
 
         self._log(
-            f"Starting benchmark in SAFE MODE on the main QGIS thread: {len(script_paths)} scripts, "
-            f"{settings['repeats']} repeats, {settings['warmups']} warm-ups"
+            tr("Starting benchmark: {0} scripts, {1} repeats, {2} warm-ups").format(
+                len(script_paths), settings["repeats"], settings["warmups"]
+            )
         )
         self._last_settings = settings
         self._last_summaries = []
@@ -189,7 +238,7 @@ class ScriptBenchPlugin:
         d.btnRun.setEnabled(False)
         d.btnCancel.setEnabled(False)
         d.progressBar.setRange(0, 0)
-        d.lblStatus.setText("Running on main QGIS thread...")
+        d.lblStatus.setText(tr("Running on main QGIS thread..."))
         d.tabWidget.setCurrentIndex(2)
 
         try:
@@ -205,12 +254,18 @@ class ScriptBenchPlugin:
             self._on_finished(summaries)
         except Exception:
             import traceback
+
             self._on_error(traceback.format_exc())
         finally:
             self._cleanup_thread()
 
     def _cancel_run(self):
-        self._log("Cancel is disabled in safe mode because QGIS Processing runs on the main thread.")
+        self._log(
+            tr(
+                "Cancel is disabled in safe mode because QGIS Processing "
+                "runs on the main thread."
+            )
+        )
 
     def _cleanup_thread(self):
         d = self._dialog
@@ -222,57 +277,65 @@ class ScriptBenchPlugin:
     def _on_progress(self, msg: str):
         self._log(msg)
         self._dialog.lblStatus.setText(msg)
-        try:
-            from qgis.PyQt.QtWidgets import QApplication
-        except ImportError:
-            from PyQt5.QtWidgets import QApplication
+        from qgis.PyQt.QtWidgets import QApplication
+
         QApplication.processEvents()
 
-    def _on_finished(self, summaries):
+    def _on_finished(self, summaries: List[ScriptSummary]):
         self._last_summaries = summaries
-        self._log(f"Benchmark complete. {len(summaries)} scripts evaluated.")
-        self._dialog.lblStatus.setText("Done.")
+        self._log(
+            tr("Benchmark complete. {0} scripts evaluated.").format(len(summaries))
+        )
+        self._dialog.lblStatus.setText(tr("Done."))
         self._populate_results_table(summaries)
         self._dialog.tabWidget.setCurrentIndex(1)
 
     def _on_error(self, msg: str):
-        self._log(f"ERROR: {msg}")
-        self._dialog.lblStatus.setText("Error — see log.")
+        self._log(tr("ERROR: {0}").format(msg))
+        self._dialog.lblStatus.setText(tr("Error — see log."))
+        QgsMessageLog.logMessage(msg, self.PLUGIN_TAG, level=2)
         QMessageBox.critical(
             self._dialog,
-            "ScriptBench error",
-            "Benchmark failed. If this happened during Processing execution, the most likely cause is that QGIS/GDAL code was run from a worker thread in the previous plugin build, or one of the scripts passed an invalid layer/parameter combination.\n\n"
-            + msg[:1200],
+            tr("ScriptBench error"),
+            tr(
+                "Benchmark failed. If this happened during Processing execution, "
+                "the most likely cause is that QGIS/GDAL code was run from a worker "
+                "thread in the previous plugin build, or one of the scripts passed "
+                "an invalid layer/parameter combination.\n\n{0}"
+            ).format(msg[:1200]),
         )
 
-    RESULT_COLUMNS = [
-        ("Script", "script_name"),
-        ("Mean (s)", None),
-        ("Min (s)", None),
-        ("Median (s)", None),
-        ("Stdev (s)", None),
-        ("CV (%)", None),
-        ("Compute (s)", None),
-        ("Save (s)", None),
-        ("Slowdown", None),
-        ("Fail/Runs", None),
-        ("Phases", None),
+    # -----------------------------------------------------------------
+    # Results table
+    # -----------------------------------------------------------------
+
+    RESULT_COLUMNS: List[List[str]] = [
+        (tr("Script"), "script_name"),
+        (tr("Mean (s)"), None),
+        (tr("Min (s)"), None),
+        (tr("Median (s)"), None),
+        (tr("Stdev (s)"), None),
+        (tr("CV (%)"), None),
+        (tr("Compute (s)"), None),
+        (tr("Save (s)"), None),
+        (tr("Slowdown"), None),
+        (tr("Fail/Runs"), None),
+        (tr("Phases"), None),
     ]
 
-    def _populate_results_table(self, summaries):
-        from .reporter import _compute_derived
+    def _populate_results_table(self, summaries: List[ScriptSummary]):
+        rows = compute_derived(summaries)
         d = self._dialog
-        rows = _compute_derived(summaries)
         tbl = d.tblResults
         tbl.setRowCount(len(rows))
         tbl.setColumnCount(len(self.RESULT_COLUMNS))
         tbl.setHorizontalHeaderLabels([c[0] for c in self.RESULT_COLUMNS])
 
-        def _cell(val, fmt=".3f"):
+        def _cell(val, cell_fmt=".3f"):
             if val is None:
                 return QTableWidgetItem("—")
             if isinstance(val, float):
-                item = QTableWidgetItem(f"{val:{fmt}}")
+                item = QTableWidgetItem(f"{val:{cell_fmt}}")
                 item.setData(Qt.ItemDataRole.UserRole, val)
                 return item
             return QTableWidgetItem(str(val))
@@ -287,30 +350,46 @@ class ScriptBenchPlugin:
             tbl.setItem(ri, 6, _cell(row["compute_mean"]))
             tbl.setItem(ri, 7, _cell(row["save_mean"]))
             sp = row["speedup_vs_fastest"]
-            tbl.setItem(ri, 8, _cell(sp, ".2f") if sp is not None else QTableWidgetItem("—"))
+            tbl.setItem(
+                ri,
+                8,
+                _cell(sp, ".2f") if sp is not None else QTableWidgetItem("—"),
+            )
             tbl.setItem(ri, 9, _cell(f"{row['failures']}/{row['runs']}"))
-            tbl.setItem(ri, 10, _cell("yes" if row["has_phases"] else "no"))
+            tbl.setItem(ri, 10, _cell(tr("yes") if row["has_phases"] else tr("no")))
 
         tbl.resizeColumnsToContents()
 
+    # -----------------------------------------------------------------
+    # Export
+    # -----------------------------------------------------------------
+
     def _export_csv(self):
         if not self._last_summaries:
-            QMessageBox.information(self._dialog, "ScriptBench", "Run a benchmark first.")
+            QMessageBox.information(
+                self._dialog, self.PLUGIN_NAME, tr("Run a benchmark first.")
+            )
             return
-        path, _ = QFileDialog.getSaveFileName(self._dialog, "Export CSV", "", "CSV files (*.csv)")
+        path, _ = QFileDialog.getSaveFileName(
+            self._dialog, tr("Export CSV"), "", tr("CSV files (*.csv)")
+        )
         if not path:
             return
         try:
             export_csv(self._last_summaries, path)
-            self._log(f"CSV exported: {path}")
+            self._log(tr("CSV exported: {0}").format(path))
         except Exception as exc:
-            QMessageBox.critical(self._dialog, "Export error", str(exc))
+            QMessageBox.critical(self._dialog, tr("Export error"), str(exc))
 
     def _export_html(self):
         if not self._last_summaries:
-            QMessageBox.information(self._dialog, "ScriptBench", "Run a benchmark first.")
+            QMessageBox.information(
+                self._dialog, self.PLUGIN_NAME, tr("Run a benchmark first.")
+            )
             return
-        path, _ = QFileDialog.getSaveFileName(self._dialog, "Export HTML report", "", "HTML files (*.html)")
+        path, _ = QFileDialog.getSaveFileName(
+            self._dialog, tr("Export HTML report"), "", tr("HTML files (*.html)")
+        )
         if not path:
             return
         try:
@@ -322,9 +401,14 @@ class ScriptBenchPlugin:
                 repeats=self._last_settings.get("repeats", 0),
                 warmups=self._last_settings.get("warmups", 0),
             )
-            self._log(f"HTML report exported: {path}")
+            self._log(tr("HTML report exported: {0}").format(path))
         except Exception as exc:
-            QMessageBox.critical(self._dialog, "Export error", str(exc))
+            QMessageBox.critical(self._dialog, tr("Export error"), str(exc))
+
+    # -----------------------------------------------------------------
+    # Logging
+    # -----------------------------------------------------------------
 
     def _log(self, msg: str):
         self._dialog.txtLog.appendPlainText(msg)
+        QgsMessageLog.logMessage(msg, self.PLUGIN_TAG, level=0)
