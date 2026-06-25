@@ -5,3 +5,4 @@
 [![Python](https://img.shields.io/badge/Python-3.9--3.12-blue?logo=python)](pyproject.toml)
 [![QGIS](https://img.shields.io/badge/QGIS-3.16--4.99-green?logo=qgis)](https://qgis.org)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Wolren/ScriptBench/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Wolren/ScriptBench)
+[![Socket](https://img.shields.io/badge/Socket-Supply%20Chain%20Security-333?logo=socketdotdev)](https://socket.dev)
