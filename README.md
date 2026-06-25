@@ -1,1 +1,100 @@
-WyFbTGljZW5zZV0oaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9naXRodWIvbGljZW5zZS9Xb2xyZW4vU2NyaXB0QmVuY2gpXShMSUNFTlNFKQpbIVtMYXN0IGNvbW1pdF0oaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9naXRodWIvbGFzdC1jb21taXQvV29scmVuL1NjcmlwdEJlbmNoKV0oaHR0cHM6Ly9naXRodWIuY29tL1dvbHJlbi9TY3JpcHRCZW5jaC9jb21taXRzKQpbIVtJc3N1ZXNdKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vZ2l0aHViL2lzc3Vlcy9Xb2xyZW4vU2NyaXB0QmVuY2gpXShodHRwczovL2dpdGh1Yi5jb20vV29scmVuL1NjcmlwdEJlbmNoL2lzc3VlcykKWyFbUmVwbyBzaXplXShodHRwczovL2ltZy5zaGllbGRzLmlvL2dpdGh1Yi9yZXBvLXNpemUvV29scmVuL1NjcmlwdEJlbmNoKV0oaHR0cHM6Ly9naXRodWIuY29tL1dvbHJlbi9TY3JpcHRCZW5jaCkKWyFbUHl0aG9uXShodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1B5dGhvbi0zLjktLTMuMTItYmx1ZT9sb2dvPXB5dGhvbildKHB5cHJvamVjdC50b21sKQpbIVtRR0lTXShodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1FHSVMtMy4xNi0tNC45OS1ncmVlbj9sb2dvPXFnaXMpXShodHRwczovL3FnaXMub3JnKQpbIVtPcGVuU1NGIFNjb3JlY2FyZF0oaHR0cHM6Ly9hcGkuc2VjdXJpdHlzY29yZWNhcmRzLmRldi9wcm9qZWN0cy9naXRodWIuY29tL1dvbHJlbi9TY3JpcHRCZW5jaC9iYWRnZSldKGh0dHBzOi8vc2VjdXJpdHlzY29yZWNhcmRzLmRldi92aWV3ZXIvP3VyaT1naXRodWIuY29tL1dvbHJlbi9TY3JpcHRCZW5jaCkKCiMgU2NyaXB0QmVuY2gKCioqQmVuY2htYXJrIGFuZCBjb21wYXJlIFB5UUdJUyBzY3JpcHRzKiog4oCUIHdpdGggcGhhc2Utc3BsaXQgdGltaW5nLCBzdWl0ZSBtYW5hZ2VtZW50LCBhbmQgc2VsZi1jb250YWluZWQgSFRNTCByZXBvcnRzLgoKIVtRR0lTXShodHRwczovL2ltZy5zaGllbGRzLmlvL2JhZGdlL1FHSVMtMy4xNiUyMOKAlCUyMDQuOTktJTIzNEE5QzZDKQohW1B5dGhvbl0oaHR0cHM6Ly9pbWcuc2hpZWxkcy5pby9iYWRnZS9QeXRob24tMy45JTIw4oCUJTIwMy4xMi1ibHVlKQohW0xpY2Vuc2VdKGh0dHBzOi8vaW1nLnNoaWVsZHMuaW8vYmFkZ2UvbGljZW5zZS1HUEwtLTIuMC1ncmVlbikKCiMjIEZlYXR1cmVzCgotICoqUnVuIFB5UUdJUyBzY3JpcHRzKiogbXVsdGlwbGUgdGltZXMgZnJvbSBhbnkgZm9sZGVyLCB3aXRoIGNvbmZpZ3VyYWJsZSByZXBlYXRzIGFuZCB3YXJtLXVwcwotICoqUGhhc2Utc3BsaXQgdGltaW5nKiog4oCTIHNjcmlwdHMgdGhhdCBpbXBsZW1lbnQgYHJ1bl9iZW5jaG1hcmsoY29udGV4dClgIGNhbiByZXBvcnQgY29tcHV0ZSB2cyBzYXZlIHBoYXNlIGR1cmF0aW9ucyBpbmRlcGVuZGVudGx5Ci0gKipTdWl0ZSBtYW5hZ2VtZW50Kiog4oCTIHNhdmUgYW5kIHJlbG9hZCBuYW1lZCBiZW5jaG1hcmsgc3VpdGVzIChzY3JpcHQgZm9sZGVyLCBmaWx0ZXIsIGFuZCBhbGwgc2V0dGluZ3MpCi0gKipTZWxmLWNvbnRhaW5lZCBIVE1MIHJlcG9ydHMqKiDigJMgaW5saW5lIFNWRyBjaGFydHMsIHN1bW1hcnkgdGFibGUsIHBlci1zY3JpcHQgcnVuIGRldGFpbHMsIGFuZCB3YXJuaW5nIGFubm90YXRpb25zCi0gKipDU1YgZXhwb3J0Kiog4oCTIHJhdyBzdGF0aXN0aWNzIGZvciBleHRlcm5hbCBhbmFseXNpcwotICoqY1Byb2ZpbGUgc3VwcG9ydCoqIOKAkyBvcHRpb25hbCBwcm9maWxpbmcgb2Ygb25lIHJ1biBwZXIgc2NyaXB0IChyZXN1bHRzIHNob3duIGlubGluZSBpbiB0aGUgSFRNTCByZXBvcnQpCi0gKipJc29sYXRlZCB3b3Jrc3BhY2UqKiDigJMgZWFjaCBydW4gZXhlY3V0ZXMgaW4gYSB0ZW1wb3JhcnkgZGlyZWN0b3J5OyBvdXRwdXRzIGFyZSBkaXNjYXJkZWQgYnkgZGVmYXVsdAotICoqSGFyZGNvZGVkLXBhdGggZGV0ZWN0aW9uKiog4oCTIHN0YXRpYyBhbmFseXNpcyB3YXJucyB3aGVuIGFic29sdXRlIHBhdGhzIGFwcGVhciBpbiBzY3JpcHQgc291cmNlCgojIyBJbnN0YWxsYXRpb24KCiMjIyBGcm9tIFpJUCAoUUdJUyBQbHVnaW4gTWFuYWdlcikKCjEuIERvd25sb2FkIHRoZSBsYXRlc3QgYHNjcmlwdGJlbmNoLnppcGAgZnJvbSB0aGUgW3JlbGVhc2VzIHBhZ2VdKGh0dHBzOi8vZ2l0aHViLmNvbS9Xb2xyZW4vc2NyaXB0YmVuY2gvcmVsZWFzZXMpCjIuIEluIFFHSVM6ICoqUGx1Z2lucyDihpIgTWFuYWdlIGFuZCBJbnN0YWxsIFBsdWdpbnMg4oaSIEluc3RhbGwgZnJvbSBaSVAqKgozLiBTZWxlY3QgdGhlIGRvd25sb2FkZWQgWklQIGZpbGUKNC4gRW5hYmxlIFNjcmlwdEJlbmNoIGluICoqSW5zdGFsbGVkKiogdGFiCgojIyMgRnJvbSBzb3VyY2UKCmBgYGJhc2gKZ2l0IGNsb25lIGh0dHBzOi8vZ2l0aHViLmNvbS9Xb2xyZW4vc2NyaXB0YmVuY2guZ2l0CmNkIHNjcmlwdGJlbmNoCmBgYAoKVGhlbiBjb3B5IHRoZSBgc2NyaXB0YmVuY2gvYCBmb2xkZXIgaW50byB5b3VyIFFHSVMgcHJvZmlsZSdzIGBweXRob24vcGx1Z2lucy9gIGRpcmVjdG9yeSwgb3IgY3JlYXRlIGEgc3ltbGluazoKCi0gKipXaW5kb3dzKio6IGAlQVBQREFUQSVcUUdJU1xRR0lTM1xwcm9maWxlc1xkZWZhdWx0XHB5dGhvblxwbHVnaW5zXGAKLSAqKkxpbnV4Kio6IGB+Ly5sb2NhbC9zaGFyZS9RR0lTL1FHSVMzL3Byb2ZpbGVzL2RlZmF1bHQvcHl0aG9uL3BsdWdpbnMvYAotICoqbWFjT1MqKjogYH4vTGlicmFyeS9BcHBsaWNhdGlvbiBTdXBwb3J0L1FHSVMvUUdJUzMvcHJvZmlsZXMvZGVmYXVsdC9weXRob24vcGx1Z2lucy9gCgojIyBVc2FnZQoKMS4gQ2xpY2sgdGhlICoqU2NyaXB0QmVuY2gqKiB0b29sYmFyIGljb24gb3IgZmluZCBpdCB1bmRlciAqKlBsdWdpbnMg4oaSIFNjcmlwdEJlbmNoKioKMi4gKipTY3JpcHQgZm9sZGVyKiog4oCTIHNlbGVjdCBhIGZvbGRlciBjb250YWluaW5nIGAucHlgIFB5UUdJUyBzY3JpcHRzCjMuICoqRmlsZSBmaWx0ZXIqKiDigJMgdXNlIGEgZ2xvYiBwYXR0ZXJuIChkZWZhdWx0IGAqLnB5YCkKNC4gKipSZXBlYXRzIC8gV2FybS11cHMqKiDigJMgbnVtYmVyIG9mIG1lYXN1cmVkIHJ1bnMgYW5kIHVubWVhc3VyZWQgd2FybS11cCBydW5zCjUuIENsaWNrICoqUnVuIGJlbmNobWFyayoqCjYuIFZpZXcgcmVzdWx0cyBpbiB0aGUgKipSZXN1bHRzKiogdGFiIG9yIGV4cG9ydCBhcyBDU1YgLyBIVE1MCgojIyMgV3JpdGluZyBiZW5jaG1hcmthYmxlIHNjcmlwdHMKClNjcmlwdEJlbmNoIGxvb2tzIGZvciBhIGZ1bmN0aW9uIG5hbWVkIGBydW5fYmVuY2htYXJrKGNvbnRleHQpYCBpbiBlYWNoIHNjcmlwdDoKCmBgYHB5dGhvbgpkZWYgcnVuX2JlbmNobWFyayhjb250ZXh0KToKICAgIGNvbnRleHQucGhhc2UoInNldHVwIikKICAgIGxheWVyID0gUWdzUHJvamVjdC5pbnN0YW5jZSgpLm1hcExheWVyc0J5TmFtZSgibXlfbGF5ZXIiKVswXQoKICAgIGNvbnRleHQucGhhc2UoImNvbXB1dGUiKQogICAgIyAuLi4gaGVhdnkgcHJvY2Vzc2luZyAuLi4KCiAgICBjb250ZXh0LnBoYXNlKCJzYXZlIikKICAgICMgLi4uIGZpbGUgb3V0cHV0IHRvIGNvbnRleHQub3V0cHV0X2RpciAuLi4KYGBgCgpTY3JpcHRzIHdpdGhvdXQgYHJ1bl9iZW5jaG1hcmtgIGFyZSB0aW1lZCBhcyBhIHNpbmdsZSBibG9jayAod2FsbCB0aW1lIG9ubHkpLiBBCnRlbXBsYXRlIGlzIGF2YWlsYWJsZSBhdCBgc2NyaXB0YmVuY2gvc2NyaXB0YmVuY2hfdGVtcGxhdGUucHlgLgoKIyMgUHJvamVjdCBzdHJ1Y3R1cmUKCmBgYApzY3JpcHRiZW5jaC8K4pSc4pSA4pSAIF9faW5pdF9fLnB5ICAgICAgICAgICAjIGNsYXNzRmFjdG9yeSBlbnRyeSBwb2ludArilJzilIDilIAgbWV0YWRhdGEudHh0ICAgICAgICAgICMgUUdJUyBwbHVnaW4gbWV0YWRhdGEK4pSc4pSA4pSAIHBsdWdpbi5weSAgICAgICAgICAgICAjIE1haW4gcGx1Z2luIGNsYXNzIChHVUksIG9yY2hlc3RyYXRpb24pCuKUnOKUgOKUgCBydW5uZXIucHkgICAgICAgICAgICAgIyBCZW5jaG1hcmsgZW5naW5lIChleGVjLCB0aW1pbmcsIHByb2ZpbGluZykK4pSc4pSA4pSAIHJlcG9ydGVyLnB5ICAgICAgICAgICAjIENTViAvIEhUTUwgcmVwb3J0IGdlbmVyYXRpb24K4pSc4pSA4pSAIGNvbnRleHQucHkgICAgICAgICAgICAjIEJlbmNobWFya0NvbnRleHQgcGFzc2VkIHRvIHNjcmlwdHMK4pSc4pSA4pSAIHN1aXRlX21hbmFnZXIucHkgICAgICAjIFN1aXRlIEpTT04gcGVyc2lzdGVuY2UK4pSc4pSA4pSAIHVpLwrilIIgICDilJzilIDilIAgZGlhbG9nLnB5ICAgICAgICAgIyBVSSBsb2FkZXIgKHFnaXMuUHlRdCBzaGltKQrilIIgICDilJTilIDilIAgbWFpbl9kaWFsb2cudWkgICAgIyBRdCBEZXNpZ25lciBmb3JtCuKUnOKUgOKUgCBpY29ucy8K4pSCICAg4pSU4pSA4pSAIHNjcmlwdGJlbmNoLnBuZyAgICMgUGx1Z2luIGljb24K4pSU4pSA4pSAIGkxOG4vICAgICAgICAgICAgICAgICAjIFRyYW5zbGF0aW9uIGZpbGVzCmBgYAoKIyMgQ29tcGF0aWJpbGl0eQoKfCBRR0lTIHZlcnNpb24gfCBRdCAgICAgIHwgUHl0aG9uICAgfCBTdGF0dXMgfAp8LS0tLS0tLS0tLS0tLXwtLS0tLS0tLS18LS0tLS0tLS0tLXwtLS0tLS0tLXwKfCAzLjE2IOKAkyAzLjM0IHwgUXQ1ICAgICB8IDMuOSAgICAgIHwg4pyTICAgICAgfAp8IDMuNDArICAgICAgIHwgUXQ2ICAgICB8IDMuMTIrICAgIHwg4pyTICAgICAgfAoKIyMgTGljZW5zZQoKR1BMLTIuMCDigJQgc2VlIGBMSUNFTlNFYC4=
+[![License](https://img.shields.io/github/license/Wolren/ScriptBench)](LICENSE) [![Last commit](https://img.shields.io/github/last-commit/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench/commits) [![Issues](https://img.shields.io/github/issues/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench/issues) [![Repo size](https://img.shields.io/github/repo-size/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench) [![Python](https://img.shields.io/badge/Python-3.9--3.12-blue?logo=python)](pyproject.toml) [![QGIS](https://img.shields.io/badge/QGIS-3.16--4.99-green?logo=qgis)](https://qgis.org) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Wolren/ScriptBench/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Wolren/ScriptBench) [![Socket](https://img.shields.io/badge/Socket-Supply%20Chain%20Security-333?logo=socketdotdev)](https://socket.dev)
+
+# ScriptBench
+
+**Benchmark and compare PyQGIS scripts** — with phase-split timing, suite management, and self-contained HTML reports.
+
+![QGIS](https://img.shields.io/badge/QGIS-3.16%20—%204.99-%234A9C6C)
+![Python](https://img.shields.io/badge/Python-3.9%20—%203.12-blue)
+![License](https://img.shields.io/badge/license-GPL--3.0-blue)
+
+## Features
+
+- **Run PyQGIS scripts** multiple times from any folder, with configurable repeats and warm-ups
+- **Phase-split timing** – scripts that implement `run_benchmark(context)` can report compute vs save phase durations independently
+- **Suite management** – save and reload named benchmark suites (script folder, filter, and all settings)
+- **Self-contained HTML reports** – inline SVG charts, summary table, per-script run details, and warning annotations
+- **CSV export** – raw statistics for external analysis
+- **cProfile support** – optional profiling of one run per script (results shown inline in the HTML report)
+- **Isolated workspace** – each run executes in a temporary directory; outputs are discarded by default
+- **Hardcoded-path detection** – static analysis warns when absolute paths appear in script source
+
+## Installation
+
+### From ZIP (QGIS Plugin Manager)
+
+1. Download the latest `scriptbench.zip` from the [releases page](https://github.com/Wolren/scriptbench/releases)
+2. In QGIS: **Plugins → Manage and Install Plugins → Install from ZIP**
+3. Select the downloaded ZIP file
+4. Enable ScriptBench in **Installed** tab
+
+### From source
+
+```bash
+git clone https://github.com/Wolren/scriptbench.git
+cd scriptbench
+```
+
+Then copy the `scriptbench/` folder into your QGIS profile's `python/plugins/` directory, or create a symlink:
+
+- **Windows**: `%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\`
+- **Linux**: `~/.local/share/QGIS/QGIS3/profiles/default/python/plugins/`
+- **macOS**: `~/Library/Application Support/QGIS/QGIS3/profiles/default/python/plugins/`
+
+## Usage
+
+1. Click the **ScriptBench** toolbar icon or find it under **Plugins → ScriptBench**
+2. **Script folder** – select a folder containing `.py` PyQGIS scripts
+3. **File filter** – use a glob pattern (default `*.py`)
+4. **Repeats / Warm-ups** – number of measured runs and unmeasured warm-up runs
+5. Click **Run benchmark**
+6. View results in the **Results** tab or export as CSV / HTML
+
+### Writing benchmarkable scripts
+
+ScriptBench looks for a function named `run_benchmark(context)` in each script:
+
+```python
+def run_benchmark(context):
+    context.phase("setup")
+    layer = QgsProject.instance().mapLayersByName("my_layer")[0]
+
+    context.phase("compute")
+    # ... heavy processing ...
+
+    context.phase("save")
+    # ... file output to context.output_dir ...
+```
+
+Scripts without `run_benchmark` are timed as a single block (wall time only). A
+template is available at `scriptbench/scriptbench_template.py`.
+
+## Project structure
+
+```
+scriptbench/
+├── __init__.py           # classFactory entry point
+├── metadata.txt          # QGIS plugin metadata
+├── plugin.py             # Main plugin class (GUI, orchestration)
+├── runner.py             # Benchmark engine (exec, timing, profiling)
+├── reporter.py           # CSV / HTML report generation
+├── context.py            # BenchmarkContext passed to scripts
+├── suite_manager.py      # Suite JSON persistence
+├── ui/
+│   ├── dialog.py         # UI loader (qgis.PyQt shim)
+│   └── main_dialog.ui    # Qt Designer form
+├── icons/
+│   └── scriptbench.png   # Plugin icon
+└── i18n/                 # Translation files
+```
+
+## Compatibility
+
+| QGIS version | Qt      | Python   | Status |
+|-------------|---------|----------|--------|
+| 3.16 – 3.34 | Qt5     | 3.9      | ✓      |
+| 3.40+       | Qt6     | 3.12+    | ✓      |
+
+## License
+
+GPL-3.0 — see `LICENSE`.
