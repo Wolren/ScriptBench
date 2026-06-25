@@ -1,10 +1,13 @@
+[![License](https://img.shields.io/github/license/Wolren/ScriptBench)](LICENSE)
+[![Last commit](https://img.shields.io/github/last-commit/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench/commits)
+[![Issues](https://img.shields.io/github/issues/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench/issues)
+[![Repo size](https://img.shields.io/github/repo-size/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench)
+[![Python](https://img.shields.io/badge/Python-3.9--3.12-blue?logo=python)](pyproject.toml)
+[![QGIS](https://img.shields.io/badge/QGIS-3.16--4.99-green?logo=qgis)](https://qgis.org)
+
 # ScriptBench
 
 **Benchmark and compare PyQGIS scripts** — with phase-split timing, suite management, and self-contained HTML reports.
-
-![QGIS](https://img.shields.io/badge/QGIS-3.16%20—%204.99-%234A9C6C)
-![Python](https://img.shields.io/badge/Python-3.9%20—%203.12-blue)
-![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
 ## Features
 
