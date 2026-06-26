@@ -4,10 +4,6 @@
 
 **Benchmark and compare PyQGIS scripts** — with phase-split timing, suite management, and self-contained HTML reports.
 
-![QGIS](https://img.shields.io/badge/QGIS-3.16%20—%204.99-%234A9C6C)
-![Python](https://img.shields.io/badge/Python-3.9%20—%203.12-blue)
-![License](https://img.shields.io/badge/license-GPL--3.0-blue)
-
 ## Features
 
 - **Run PyQGIS scripts** multiple times from any folder, with configurable repeats and warm-ups
