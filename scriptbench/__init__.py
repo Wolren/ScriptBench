@@ -12,6 +12,7 @@ def classFactory(iface):
         return ScriptBenchPlugin(iface)
     except Exception:
         import traceback
+
         from qgis.core import QgsMessageLog
 
         QgsMessageLog.logMessage(

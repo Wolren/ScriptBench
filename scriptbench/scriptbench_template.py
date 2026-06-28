@@ -29,9 +29,9 @@ Phases are optional.  If you omit them, ScriptBench records only total wall time
 """
 
 import os
-import processing
-from qgis.core import QgsProject, QgsPointXY
 
+import processing
+from qgis.core import QgsPointXY, QgsProject
 
 # ---------------------------------------------------------------------------
 # Hardcoded defaults used only when NOT running under ScriptBench

@@ -11,9 +11,8 @@ Suites are stored in the QGIS user profile directory under scriptbench/suites/.
 """
 
 import json
-import os
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Optional
 
 
 def _suites_dir() -> Path:
@@ -43,15 +42,15 @@ class Suite:
         self,
         name: str,
         folder: str,
-        settings: Optional[Dict] = None,
+        settings: Optional[dict] = None,
         description: str = "",
     ):
         self.name = name
         self.folder = folder
-        self.settings: Dict = {**DEFAULT_SETTINGS, **(settings or {})}
+        self.settings: dict = {**DEFAULT_SETTINGS, **(settings or {})}
         self.description = description
 
-    def to_dict(self) -> Dict:
+    def to_dict(self) -> dict:
         return {
             "name": self.name,
             "folder": self.folder,
@@ -60,7 +59,7 @@ class Suite:
         }
 
     @staticmethod
-    def from_dict(d: Dict) -> "Suite":
+    def from_dict(d: dict) -> "Suite":
         return Suite(
             name=d.get("name", "unnamed"),
             folder=d.get("folder", ""),
@@ -68,7 +67,7 @@ class Suite:
             description=d.get("description", ""),
         )
 
-    def resolve_scripts(self) -> List[str]:
+    def resolve_scripts(self) -> list[str]:
         """Return sorted list of .py file paths matching the filter in folder."""
         folder = Path(self.folder)
         if not folder.is_dir():
@@ -78,7 +77,7 @@ class Suite:
 
 
 class SuiteManager:
-    def list_suites(self) -> List[str]:
+    def list_suites(self) -> list[str]:
         d = _suites_dir()
         return sorted(p.stem for p in d.glob("*.json"))
 
@@ -87,7 +86,7 @@ class SuiteManager:
         if not path.exists():
             return None
         try:
-            with open(path, "r", encoding="utf-8") as fh:
+            with open(path, encoding="utf-8") as fh:
                 return Suite.from_dict(json.load(fh))
         except (json.JSONDecodeError, OSError) as exc:
             from qgis.core import QgsMessageLog

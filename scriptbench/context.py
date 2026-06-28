@@ -14,7 +14,7 @@ SAVE_OUTPUT is also injected into the script namespace as a global.
 """
 
 import time
-from typing import Dict, List, Optional
+from typing import Optional
 
 
 class PhaseRecord:
@@ -40,7 +40,7 @@ class BenchmarkContext:
         self.temp_dir = temp_dir
         self.save_output = save_output
 
-        self._phases: List[PhaseRecord] = []
+        self._phases: list[PhaseRecord] = []
         self._current: Optional[PhaseRecord] = None
         self._total_start: float = 0.0
         self._total_end: Optional[float] = None
@@ -76,9 +76,9 @@ class BenchmarkContext:
             return 0.0
         return self._total_end - self._total_start
 
-    def phase_times(self) -> Dict[str, float]:
+    def phase_times(self) -> dict[str, float]:
         """Returns {phase_name: seconds} for all completed phases."""
-        result: Dict[str, float] = {}
+        result: dict[str, float] = {}
         for p in self._phases:
             dur = p.duration()
             if p.name in result:

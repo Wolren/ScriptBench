@@ -7,19 +7,15 @@ could break inside QGIS's bundled Python environment).
 """
 
 import csv
-import json
-import os
-import math
 from datetime import datetime
-from pathlib import Path
-from typing import Dict, List, Optional, Any
+from typing import Any, Optional
 
 from .runner import ScriptSummary
 
 
 def compute_derived(
-    summaries: List[ScriptSummary],
-) -> List[Dict[str, Any]]:
+    summaries: list[ScriptSummary],
+) -> list[dict[str, Any]]:
     return _compute_derived(summaries)
 
 
@@ -28,7 +24,7 @@ def compute_derived(
 # --------------------------------------------------------------------------
 
 
-def export_csv(summaries: List[ScriptSummary], output_path: str) -> None:
+def export_csv(summaries: list[ScriptSummary], output_path: str) -> None:
     rows = []
     for s in summaries:
         ws = s.wall_stats()
@@ -75,7 +71,7 @@ def _fmt(v) -> str:
 # --------------------------------------------------------------------------
 
 
-def _compute_derived(summaries: List[ScriptSummary]) -> List[Dict[str, Any]]:
+def _compute_derived(summaries: list[ScriptSummary]) -> list[dict[str, Any]]:
     rows = []
     valid = [s for s in summaries if s.wall_stats()["mean"] is not None]
     if not valid:
@@ -123,15 +119,15 @@ def _compute_derived(summaries: List[ScriptSummary]) -> List[Dict[str, Any]]:
 
 
 def _bar_chart_svg(
-    labels: List[str],
-    values: List[Optional[float]],
+    labels: list[str],
+    values: list[Optional[float]],
     title: str,
     color: str = "#4a90d9",
     unit: str = "s",
     width: int = 680,
     height: int = 300,
 ) -> str:
-    clean = [(l, v if v is not None else 0.0) for l, v in zip(labels, values)]
+    clean = [(label, v if v is not None else 0.0) for label, v in zip(labels, values)]
     max_val = max(v for _, v in clean) if clean else 1.0
     if max_val == 0:
         max_val = 1.0
@@ -181,10 +177,10 @@ def _bar_chart_svg(
 
 
 def _grouped_bar_svg(
-    labels: List[str],
-    groups: Dict[str, List[Optional[float]]],
+    labels: list[str],
+    groups: dict[str, list[Optional[float]]],
     title: str,
-    colors: Dict[str, str],
+    colors: dict[str, str],
     unit: str = "s",
     width: int = 680,
     height: int = 320,
@@ -300,7 +296,7 @@ footer{margin-top:48px;color:#aaa;font-size:0.78rem;text-align:center}
 
 
 def export_html(
-    summaries: List[ScriptSummary],
+    summaries: list[ScriptSummary],
     output_path: str,
     suite_name: str = "",
     repeats: int = 0,
@@ -403,7 +399,7 @@ def export_html(
             f"<td>{_s(res.wall_time)}</td>"
             f"<td>{_s(res.compute_time)}</td>"
             f"<td>{_s(res.save_time)}</td>"
-            f"<td>{'yes' if res.success else '<span style="color:red">FAIL</span>'}</td>"
+            f"<td>{'yes' if res.success else '<span style=color:red>FAIL</span>'}</td>"
             f"<td style='font-size:0.78rem;color:#c00'>{_esc(res.error or '')[:120]}</td></tr>"
             for res in s_obj.results
         )

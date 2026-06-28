@@ -2,16 +2,15 @@
 runner.py  --  benchmark engine for ScriptBench.
 """
 
+import cProfile
 import io
-import os
-import time
+import pstats
 import shutil
 import tempfile
+import time
 import traceback
-import cProfile
-import pstats
 from pathlib import Path
-from typing import Callable, Dict, List, Optional, Any
+from typing import Any, Callable, Optional
 
 from .context import BenchmarkContext
 
@@ -23,13 +22,13 @@ class RunResult:
         self.wall_time: float = 0.0
         self.compute_time: Optional[float] = None
         self.save_time: Optional[float] = None
-        self.other_phase_times: Dict[str, float] = {}
+        self.other_phase_times: dict[str, float] = {}
         self.has_phases: bool = False
         self.success: bool = False
         self.error: Optional[str] = None
-        self.warnings: List[str] = []
+        self.warnings: list[str] = []
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "script": self.script_name,
             "run": self.run_index,
@@ -44,27 +43,27 @@ class RunResult:
 
 
 class ScriptSummary:
-    def __init__(self, script_name: str, results: List[RunResult]):
+    def __init__(self, script_name: str, results: list[RunResult]):
         self.script_name = script_name
         self.results = results
-        self.warnings: List[str] = []
+        self.warnings: list[str] = []
 
-    def _wall_times(self) -> List[float]:
+    def _wall_times(self) -> list[float]:
         return [r.wall_time for r in self.results if r.success]
 
-    def _compute_times(self) -> List[float]:
+    def _compute_times(self) -> list[float]:
         return [
             r.compute_time
             for r in self.results
             if r.success and r.compute_time is not None
         ]
 
-    def _save_times(self) -> List[float]:
+    def _save_times(self) -> list[float]:
         return [
             r.save_time for r in self.results if r.success and r.save_time is not None
         ]
 
-    def _stats(self, values: List[float]) -> Dict[str, Any]:
+    def _stats(self, values: list[float]) -> dict[str, Any]:
         if not values:
             return {
                 "min": None,
@@ -94,13 +93,13 @@ class ScriptSummary:
             "n": n,
         }
 
-    def wall_stats(self) -> Dict[str, Any]:
+    def wall_stats(self) -> dict[str, Any]:
         return self._stats(self._wall_times())
 
-    def compute_stats(self) -> Dict[str, Any]:
+    def compute_stats(self) -> dict[str, Any]:
         return self._stats(self._compute_times())
 
-    def save_stats(self) -> Dict[str, Any]:
+    def save_stats(self) -> dict[str, Any]:
         return self._stats(self._save_times())
 
     def failure_count(self) -> int:
@@ -110,7 +109,7 @@ class ScriptSummary:
         return any(r.has_phases for r in self.results if r.success)
 
 
-def _detect_hardcoded_paths(source: str) -> List[str]:
+def _detect_hardcoded_paths(source: str) -> list[str]:
     import re
 
     hits = []
@@ -151,13 +150,13 @@ class BenchmarkRunner:
 
     def run_suite(
         self,
-        script_paths: List[str],
+        script_paths: list[str],
         repeats: int = 5,
         warmups: int = 1,
         save_output: bool = False,
         profile_runs: bool = False,
         preserve_temp: bool = False,
-    ) -> List[ScriptSummary]:
+    ) -> list[ScriptSummary]:
         summaries = []
         for sp in script_paths:
             summary = self._run_script(
@@ -179,7 +178,7 @@ class BenchmarkRunner:
         self._progress(f"Starting: {name}")
 
         try:
-            with open(script_path, "r", encoding="utf-8") as fh:
+            with open(script_path, encoding="utf-8") as fh:
                 source = fh.read()
         except Exception as exc:
             s = ScriptSummary(name, [])
@@ -194,7 +193,7 @@ class BenchmarkRunner:
             )
         uses_api = _has_benchmark_api(source)
 
-        all_results: List[RunResult] = []
+        all_results: list[RunResult] = []
         total_runs = warmups + repeats
 
         for i in range(total_runs):
@@ -243,7 +242,7 @@ class BenchmarkRunner:
             output_dir=temp_dir, temp_dir=temp_dir, save_output=save_output
         )
 
-        ns: Dict[str, Any] = {
+        ns: dict[str, Any] = {
             "__name__": "__scriptbench__",
             "__file__": name,
             "SAVE_OUTPUT": save_output,
@@ -252,8 +251,8 @@ class BenchmarkRunner:
             "BENCH_CONTEXT": ctx,
         }
         try:
-            from qgis.core import QgsProject, QgsApplication
             import processing
+            from qgis.core import QgsApplication, QgsProject
 
             ns["QgsProject"] = QgsProject
             ns["QgsApplication"] = QgsApplication

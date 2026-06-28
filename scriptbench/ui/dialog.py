@@ -4,7 +4,7 @@ dialog.py  --  load the .ui file at runtime using qgis.PyQt (Qt5/Qt6 shim).
 
 from pathlib import Path
 
-from qgis.PyQt import uic, QtWidgets
+from qgis.PyQt import QtWidgets, uic
 
 UI_PATH = Path(__file__).parent / "main_dialog.ui"
 

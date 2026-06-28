@@ -3,16 +3,16 @@ plugin.py  --  ScriptBench main plugin class.
 """
 
 from pathlib import Path
-from typing import List, Optional, Dict, Any
+from typing import Any, Optional
 
-from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox, QTableWidgetItem
-from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtCore import Qt, QCoreApplication
 from qgis.core import QgsMessageLog
+from qgis.PyQt.QtCore import QCoreApplication, Qt
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox, QTableWidgetItem
 
-from .suite_manager import SuiteManager, Suite, DEFAULT_SETTINGS
+from .reporter import compute_derived, export_csv, export_html
 from .runner import BenchmarkRunner, ScriptSummary
-from .reporter import export_csv, export_html, compute_derived
+from .suite_manager import DEFAULT_SETTINGS, Suite, SuiteManager
 
 
 def tr(message: str) -> str:
@@ -28,8 +28,8 @@ class ScriptBenchPlugin:
         self._action: Optional[QAction] = None
         self._dialog = None
         self._suite_manager = SuiteManager()
-        self._last_summaries: List[ScriptSummary] = []
-        self._last_settings: Dict[str, Any] = dict(DEFAULT_SETTINGS)
+        self._last_summaries: list[ScriptSummary] = []
+        self._last_settings: dict[str, Any] = dict(DEFAULT_SETTINGS)
 
     # -----------------------------------------------------------------
     # Plugin lifecycle
@@ -198,7 +198,7 @@ class ScriptBenchPlugin:
     # Benchmark execution
     # -----------------------------------------------------------------
 
-    def _build_settings(self) -> Dict[str, Any]:
+    def _build_settings(self) -> dict[str, Any]:
         d = self._dialog
         return {
             "repeats": d.spnRepeats.value(),
@@ -281,7 +281,7 @@ class ScriptBenchPlugin:
 
         QApplication.processEvents()
 
-    def _on_finished(self, summaries: List[ScriptSummary]):
+    def _on_finished(self, summaries: list[ScriptSummary]):
         self._last_summaries = summaries
         self._log(
             tr("Benchmark complete. {0} scripts evaluated.").format(len(summaries))
@@ -309,7 +309,7 @@ class ScriptBenchPlugin:
     # Results table
     # -----------------------------------------------------------------
 
-    RESULT_COLUMNS: List[List[str]] = [
+    RESULT_COLUMNS: list[list[str]] = [
         (tr("Script"), "script_name"),
         (tr("Mean (s)"), None),
         (tr("Min (s)"), None),
@@ -323,7 +323,7 @@ class ScriptBenchPlugin:
         (tr("Phases"), None),
     ]
 
-    def _populate_results_table(self, summaries: List[ScriptSummary]):
+    def _populate_results_table(self, summaries: list[ScriptSummary]):
         rows = compute_derived(summaries)
         d = self._dialog
         tbl = d.tblResults
