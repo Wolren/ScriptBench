@@ -1,19 +1,25 @@
-[![License](https://img.shields.io/github/license/Wolren/ScriptBench)](LICENSE) [![Last commit](https://img.shields.io/github/last-commit/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench/commits) [![Issues](https://img.shields.io/github/issues/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench/issues) [![Repo size](https://img.shields.io/github/repo-size/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench) [![Python](https://img.shields.io/badge/Python-3.9--3.12-blue?logo=python)](pyproject.toml) [![QGIS](https://img.shields.io/badge/QGIS-3.16--4.99-green?logo=qgis)](https://qgis.org) [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Wolren/ScriptBench/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Wolren/ScriptBench) [![Socket](https://img.shields.io/badge/Socket-Supply%20Chain%20Security-333?logo=socketdotdev)](https://socket.dev)
+[![CI](https://github.com/Wolren/ScriptBench/actions/workflows/ci.yml/badge.svg)](https://github.com/Wolren/ScriptBench/actions/workflows/ci.yml)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Wolren/ScriptBench/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Wolren/ScriptBench)
+[![Socket](https://img.shields.io/badge/Socket-Supply%20Chain%20Security-333?logo=socketdotdev)](https://socket.dev)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![QGIS 3.22+](https://img.shields.io/badge/QGIS-3.22+-green)](https://qgis.org)
+[![Qt](https://img.shields.io/badge/Qt-5.x_|_6.x-green)](https://www.qt.io/)
 
 # ScriptBench
 
-**Benchmark and compare PyQGIS scripts** — with phase-split timing, suite management, and self-contained HTML reports.
+**Benchmark and compare PyQGIS scripts** - with phase-split timing, suite management, and self-contained HTML reports.
 
 ## Features
 
 - **Run PyQGIS scripts** multiple times from any folder, with configurable repeats and warm-ups
-- **Phase-split timing** – scripts that implement `run_benchmark(context)` can report compute vs save phase durations independently
-- **Suite management** – save and reload named benchmark suites (script folder, filter, and all settings)
-- **Self-contained HTML reports** – inline SVG charts, summary table, per-script run details, and warning annotations
-- **CSV export** – raw statistics for external analysis
-- **cProfile support** – optional profiling of one run per script (results shown inline in the HTML report)
-- **Isolated workspace** – each run executes in a temporary directory; outputs are discarded by default
-- **Hardcoded-path detection** – static analysis warns when absolute paths appear in script source
+- **Phase-split timing** - scripts that implement `run_benchmark(context)` can report compute vs save phase durations independently
+- **Suite management** - save and reload named benchmark suites (script folder, filter, and all settings)
+- **Self-contained HTML reports** - inline SVG charts, summary table, per-script run details, and warning annotations
+- **CSV export** - raw statistics for external analysis
+- **cProfile support** - optional profiling of one run per script (results shown inline in the HTML report)
+- **Isolated workspace** - each run executes in a temporary directory; outputs are discarded by default
+- **Hardcoded-path detection** - static analysis warns when absolute paths appear in script source
 
 ## Installation
 
@@ -40,9 +46,9 @@ Then copy the `scriptbench/` folder into your QGIS profile's `python/plugins/` d
 ## Usage
 
 1. Click the **ScriptBench** toolbar icon or find it under **Plugins → ScriptBench**
-2. **Script folder** – select a folder containing `.py` PyQGIS scripts
-3. **File filter** – use a glob pattern (default `*.py`)
-4. **Repeats / Warm-ups** – number of measured runs and unmeasured warm-up runs
+2. **Script folder** - select a folder containing `.py` PyQGIS scripts
+3. **File filter** - use a glob pattern (default `*.py`)
+4. **Repeats / Warm-ups** - number of measured runs and unmeasured warm-up runs
 5. Click **Run benchmark**
 6. View results in the **Results** tab or export as CSV / HTML
 
@@ -88,9 +94,9 @@ scriptbench/
 
 | QGIS version | Qt      | Python   | Status |
 |-------------|---------|----------|--------|
-| 3.16 – 3.34 | Qt5     | 3.9      | ✓      |
+| 3.16 - 3.34 | Qt5     | 3.9      | ✓      |
 | 3.40+       | Qt6     | 3.12+    | ✓      |
 
 ## License
 
-GPL-3.0 — see `LICENSE`.
+GPL-3.0 - see `LICENSE`.

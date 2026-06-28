@@ -1,28 +1,17 @@
-# Old version folders
-1/
-2/
-
-# Python cache
+*.zip
 __pycache__/
 *.pyc
 *.pyo
 .ruff_cache/
-
-# IDE
+.pytest_cache/
 .idea/
-*.swp
-*.swo
-
-# OS
+.vscode/
 .DS_Store
 Thumbs.db
-
-# Distribution
-*.zip
-*.egg-info/
+.venv/
+venv/
+env/
 dist/
 build/
-
-# Translations (compiled)
-*.qm
+*.egg-info/
 /archive/
