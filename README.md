@@ -95,25 +95,6 @@ A template is available at `scriptbench/scriptbench_template.py`.
 | pytest | Unit testing |
 | GitHub Actions | CI pipeline |
 
-## Project structure
-
-```
-scriptbench/
-├── __init__.py           # classFactory entry point
-├── metadata.txt          # QGIS plugin metadata
-├── plugin.py             # Main plugin class (GUI, orchestration)
-├── runner.py             # Benchmark engine (exec, timing, profiling)
-├── reporter.py           # CSV / HTML report generation
-├── context.py            # BenchmarkContext passed to scripts
-├── suite_manager.py      # Suite JSON persistence
-├── ui/
-│   ├── dialog.py         # UI loader (qgis.PyQt shim)
-│   └── main_dialog.ui    # Qt Designer form
-├── icons/
-│   └── scriptbench.png   # Plugin icon
-└── i18n/                 # Translation files
-```
-
 ## Compatibility
 
 | QGIS version | Qt | Python | Status |
