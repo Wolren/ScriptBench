@@ -1,25 +1,25 @@
-[![CI](https://github.com/Wolren/ScriptBench/actions/workflows/ci.yml/badge.svg)](https://github.com/Wolren/ScriptBench/actions/workflows/ci.yml)
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Wolren/ScriptBench/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Wolren/ScriptBench)
-[![Socket](https://img.shields.io/badge/Socket-Supply%20Chain%20Security-333?logo=socketdotdev)](https://socket.dev)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![QGIS 3.22+](https://img.shields.io/badge/QGIS-3.22+-green)](https://qgis.org)
-[![Qt](https://img.shields.io/badge/Qt-5.x_|_6.x-green)](https://www.qt.io/)
+<div align="center">
+
+![ScriptBench](scriptbench/icons/scriptbench.png)
 
 # ScriptBench
 
-Benchmark and compare PyQGIS scripts with phase-split timing, suite management,
-and self-contained HTML reports.
+Benchmark and compare PyQGIS scripts with phase-split timing, suite management, and self-contained HTML reports.
 
----
+[![License][license-badge]][license-url]
+[![Last commit][commit-badge]][commits-url]
+[![Issues][issues-badge]][issues-url]
+[![Code size][size-badge]][repo-url]
+[![Python][python-badge]][pyproject-url]
+[![QGIS][qgis-badge]][qgis-url]
+[![CI][ci-badge]][ci-url]
+[![OpenSSF Scorecard][scorecard-badge]][scorecard-url]
+
+</div>
 
 ## Problem
 
-Measuring PyQGIS script performance manually is inconsistent. Ad-hoc timing with
-`time.time()` ignores warm-up effects, conflates compute and save phases, and
-produces results that are hard to compare across runs or script versions.
-ScriptBench provides a repeatable framework for benchmarking PyQGIS scripts with
-configurable warm-ups, phase-split timing, and structured output.
+Measuring PyQGIS script performance manually is inconsistent. Ad-hoc timing with `time.time()` ignores warm-up effects, conflates compute and save phases, and produces results that are hard to compare across runs or script versions. ScriptBench provides a repeatable framework for benchmarking PyQGIS scripts with configurable warm-ups, phase-split timing, and structured output.
 
 ## Features
 
@@ -43,13 +43,7 @@ configurable warm-ups, phase-split timing, and structured output.
 
 ### From source
 
-```bash
-git clone https://github.com/Wolren/ScriptBench.git
-cd scriptbench
-```
-
-Then copy the `scriptbench/` folder into your QGIS profile's `python/plugins/`
-directory, or create a symlink:
+Copy the `scriptbench/` folder into your QGIS profile's `python/plugins/` directory, or create a symlink:
 
 - **Windows**: `%APPDATA%\QGIS\QGIS3\profiles\default\python\plugins\`
 - **Linux**: `~/.local/share/QGIS/QGIS3/profiles/default/python/plugins/`
@@ -80,8 +74,7 @@ def run_benchmark(context):
     # ... file output to context.output_dir ...
 ```
 
-Scripts without `run_benchmark` are timed as a single block (wall time only).
-A template is available at `scriptbench/scriptbench_template.py`.
+Scripts without `run_benchmark` are timed as a single block (wall time only). A template is available at `scriptbench/scriptbench_template.py`.
 
 ## Tech stack
 
@@ -105,19 +98,37 @@ A template is available at `scriptbench/scriptbench_template.py`.
 
 ## Limitations
 
-- **QGIS dependency** - ScriptBench runs inside QGIS's Python environment and
-  cannot be used standalone. Scripts under test must be compatible with the
-  host QGIS version.
-- **Phase timing requires the API** - compute/save phase-split data is only
-  collected for scripts that implement the `run_benchmark(context)` function.
-  Scripts without it report total wall time only.
-- **Single-machine execution** - all benchmarks run on the local machine.
-  There is no distributed or remote execution mode.
-- **cProfile only** - profiling uses Python's built-in cProfile. Memory
-  profiling, GPU timing, and line-level profiling are not supported.
-- **Static HTML reports** - reports are fully self-contained but static. They
-  include inline SVG charts with no interactive filtering or sorting.
+- **QGIS dependency** - ScriptBench runs inside QGIS's Python environment and cannot be used standalone. Scripts under test must be compatible with the host QGIS version.
+- **Phase timing requires the API** - compute/save phase-split data is only collected for scripts that implement the `run_benchmark(context)` function. Scripts without it report total wall time only.
+- **Single-machine execution** - all benchmarks run on the local machine. There is no distributed or remote execution mode.
+- **cProfile only** - profiling uses Python's built-in cProfile. Memory profiling, GPU timing, and line-level profiling are not supported.
+- **Static HTML reports** - reports are fully self-contained but static. They include inline SVG charts with no interactive filtering or sorting.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## Security
+
+See [SECURITY.md](SECURITY.md).
 
 ## License
 
-GPL-3.0 - see `LICENSE`.
+GPL-3.0 - see [LICENSE](LICENSE).
+
+[license-badge]: https://img.shields.io/github/license/Wolren/ScriptBench
+[license-url]: LICENSE
+[commit-badge]: https://img.shields.io/github/last-commit/Wolren/ScriptBench
+[commits-url]: https://github.com/Wolren/ScriptBench/commits
+[issues-badge]: https://img.shields.io/github/issues/Wolren/ScriptBench
+[issues-url]: https://github.com/Wolren/ScriptBench/issues
+[size-badge]: https://img.shields.io/github/languages/code-size/Wolren/ScriptBench
+[repo-url]: https://github.com/Wolren/ScriptBench
+[python-badge]: https://img.shields.io/badge/Python-3.9+-blue?logo=python
+[pyproject-url]: pyproject.toml
+[qgis-badge]: https://img.shields.io/badge/QGIS-3.22+-green
+[qgis-url]: https://qgis.org
+[ci-badge]: https://github.com/Wolren/ScriptBench/actions/workflows/ci.yml/badge.svg
+[ci-url]: https://github.com/Wolren/ScriptBench/actions/workflows/ci.yml
+[scorecard-badge]: https://api.securityscorecards.dev/projects/github.com/Wolren/ScriptBench/badge
+[scorecard-url]: https://securityscorecards.dev/viewer/?uri=github.com/Wolren/ScriptBench
