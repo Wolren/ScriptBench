@@ -1,8 +1,5 @@
 [![CI](https://github.com/Wolren/ScriptBench/actions/workflows/ci.yml/badge.svg)](https://github.com/Wolren/ScriptBench/actions/workflows/ci.yml)
-[![License: GPL v3](https://img.shields.io/github/license/Wolren/ScriptBench)](LICENSE)
-[![Last commit](https://img.shields.io/github/last-commit/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench/commits/master)
-[![Issues](https://img.shields.io/github/issues/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench/issues)
-[![Repo size](https://img.shields.io/github/repo-size/Wolren/ScriptBench)](https://github.com/Wolren/ScriptBench)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](LICENSE)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/Wolren/ScriptBench/badge)](https://securityscorecards.dev/viewer/?uri=github.com/Wolren/ScriptBench)
 [![Socket](https://img.shields.io/badge/Socket-Supply%20Chain%20Security-333?logo=socketdotdev)](https://socket.dev)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
@@ -13,6 +10,8 @@
 
 Benchmark and compare PyQGIS scripts with phase-split timing, suite management,
 and self-contained HTML reports.
+
+---
 
 ## Problem
 
@@ -37,7 +36,7 @@ configurable warm-ups, phase-split timing, and structured output.
 
 ### From ZIP (QGIS Plugin Manager)
 
-1. Download the latest `scriptbench.zip` from the [releases page](https://github.com/Wolren/scriptbench/releases)
+1. Download the latest `scriptbench.zip` from the [releases page](https://github.com/Wolren/ScriptBench/releases)
 2. In QGIS: **Plugins > Manage and Install Plugins > Install from ZIP**
 3. Select the downloaded ZIP file
 4. Enable ScriptBench in the **Installed** tab
@@ -45,7 +44,7 @@ configurable warm-ups, phase-split timing, and structured output.
 ### From source
 
 ```bash
-git clone https://github.com/Wolren/scriptbench.git
+git clone https://github.com/Wolren/ScriptBench.git
 cd scriptbench
 ```
 
@@ -99,8 +98,10 @@ A template is available at `scriptbench/scriptbench_template.py`.
 
 | QGIS version | Qt | Python | Status |
 |---|---|---|---|
-| 3.16 - 3.34 | Qt5 | 3.9 | Supported |
-| 3.40+ | Qt6 | 3.12+ | Supported |
+| 3.22 LTR | Qt5 | 3.9+ | Tested in CI |
+| 3.x stable | Qt5/Qt6 | 3.9+ | Tested in CI |
+| 4.2 | Qt6 | 3.12+ | Tested in CI |
+| 4.x latest | Qt6 | 3.12+ | Tested in CI |
 
 ## Limitations
 
