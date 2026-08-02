@@ -5,10 +5,11 @@ The HTML report is self-contained: all charts are inline SVG produced from
 Python standard library data only (no external JS/CSS dependencies that
 could break inside QGIS's bundled Python environment).
 """
+from __future__ import annotations
 
 import csv
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 
 from .runner import ScriptSummary
 
@@ -120,7 +121,7 @@ def _compute_derived(summaries: list[ScriptSummary]) -> list[dict[str, Any]]:
 
 def _bar_chart_svg(
     labels: list[str],
-    values: list[Optional[float]],
+    values: list[float | None],
     title: str,
     color: str = "#4a90d9",
     unit: str = "s",
@@ -178,7 +179,7 @@ def _bar_chart_svg(
 
 def _grouped_bar_svg(
     labels: list[str],
-    groups: dict[str, list[Optional[float]]],
+    groups: dict[str, list[float | None]],
     title: str,
     colors: dict[str, str],
     unit: str = "s",

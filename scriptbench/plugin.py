@@ -1,9 +1,10 @@
 """
 plugin.py  --  ScriptBench main plugin class.
 """
+from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, Optional
+from typing import Any
 
 from qgis.core import QgsMessageLog
 from qgis.PyQt.QtCore import QCoreApplication, Qt
@@ -25,7 +26,7 @@ class ScriptBenchPlugin:
 
     def __init__(self, iface):
         self.iface = iface
-        self._action: Optional[QAction] = None
+        self._action: QAction | None = None
         self._dialog = None
         self._suite_manager = SuiteManager()
         self._last_summaries: list[ScriptSummary] = []

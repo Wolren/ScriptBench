@@ -9,10 +9,10 @@ A suite is a named collection of:
 
 Suites are stored in the QGIS user profile directory under scriptbench/suites/.
 """
+from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Optional
 
 
 def _suites_dir() -> Path:
@@ -42,7 +42,7 @@ class Suite:
         self,
         name: str,
         folder: str,
-        settings: Optional[dict] = None,
+        settings: dict | None = None,
         description: str = "",
     ):
         self.name = name
@@ -59,7 +59,7 @@ class Suite:
         }
 
     @staticmethod
-    def from_dict(d: dict) -> "Suite":
+    def from_dict(d: dict) -> Suite:
         return Suite(
             name=d.get("name", "unnamed"),
             folder=d.get("folder", ""),
@@ -81,7 +81,7 @@ class SuiteManager:
         d = _suites_dir()
         return sorted(p.stem for p in d.glob("*.json"))
 
-    def load(self, name: str) -> Optional["Suite"]:
+    def load(self, name: str) -> Suite | None:
         path = _suites_dir() / f"{name}.json"
         if not path.exists():
             return None

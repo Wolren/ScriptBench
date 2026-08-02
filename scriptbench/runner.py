@@ -1,6 +1,7 @@
 """
 runner.py  --  benchmark engine for ScriptBench.
 """
+from __future__ import annotations
 
 import cProfile
 import io
@@ -10,7 +11,7 @@ import tempfile
 import time
 import traceback
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 from .context import BenchmarkContext
 
@@ -20,12 +21,12 @@ class RunResult:
         self.script_name = script_name
         self.run_index = run_index
         self.wall_time: float = 0.0
-        self.compute_time: Optional[float] = None
-        self.save_time: Optional[float] = None
+        self.compute_time: float | None = None
+        self.save_time: float | None = None
         self.other_phase_times: dict[str, float] = {}
         self.has_phases: bool = False
         self.success: bool = False
-        self.error: Optional[str] = None
+        self.error: str | None = None
         self.warnings: list[str] = []
 
     def to_dict(self) -> dict[str, Any]:
@@ -144,7 +145,7 @@ def _stop_profiling(pr: cProfile.Profile) -> str:
 class BenchmarkRunner:
     def __init__(
         self,
-        progress_callback: Optional[Callable[[str], None]] = None,
+        progress_callback: Callable[[str], None] | None = None,
     ):
         self._progress = progress_callback or (lambda msg: None)
 

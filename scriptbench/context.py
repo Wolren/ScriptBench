@@ -12,16 +12,16 @@ Usage inside a benchmark-ready script:
 
 SAVE_OUTPUT is also injected into the script namespace as a global.
 """
+from __future__ import annotations
 
 import time
-from typing import Optional
 
 
 class PhaseRecord:
     def __init__(self, name: str, start: float):
         self.name = name
         self.start = start
-        self.end: Optional[float] = None
+        self.end: float | None = None
 
     def duration(self) -> float:
         if self.end is None:
@@ -41,9 +41,9 @@ class BenchmarkContext:
         self.save_output = save_output
 
         self._phases: list[PhaseRecord] = []
-        self._current: Optional[PhaseRecord] = None
+        self._current: PhaseRecord | None = None
         self._total_start: float = 0.0
-        self._total_end: Optional[float] = None
+        self._total_end: float | None = None
 
     # -----------------------------------------------------------------
     # Public API for scripts
@@ -87,11 +87,11 @@ class BenchmarkContext:
                 result[p.name] = dur
         return result
 
-    def compute_time(self) -> Optional[float]:
+    def compute_time(self) -> float | None:
         pt = self.phase_times()
         return pt.get("compute", None)
 
-    def save_time(self) -> Optional[float]:
+    def save_time(self) -> float | None:
         pt = self.phase_times()
         return pt.get("save", None)
 
